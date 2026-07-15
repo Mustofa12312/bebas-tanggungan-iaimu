@@ -2,21 +2,23 @@ import { useState, useEffect } from 'react';
 import { ClipboardList } from 'lucide-react';
 import { Card, StatusBadge, LoadingSpinner, EmptyState } from '../../components/ui';
 import { apiGetAuditLogs } from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
 
 export default function AuditLogPage() {
+  const { user } = useAuth();
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetch = async () => {
       try {
-        const res = await apiGetAuditLogs();
+        const res = await apiGetAuditLogs(user?.token);
         if (res.success) setLogs(res.data);
       } catch (err) { console.error(err); }
       finally { setLoading(false); }
     };
     fetch();
-  }, []);
+  }, [user]);
 
   const fmtDT = (d) => new Date(d).toLocaleDateString('id-ID', {
     day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'

@@ -5,9 +5,11 @@ import { ArrowLeft, Printer, AlertTriangle, CheckCircle } from 'lucide-react';
 import { Card, Button, StatusBadge, LoadingSpinner, Modal, Alert } from '../../components/ui';
 import { apiGetApplication, apiUpdateStatus } from '../../services/api';
 import { STATUS } from '../../constants/config';
+import { useAuth } from '../../context/AuthContext';
 
 export default function DetailPage() {
   const { id } = useParams();
+  const { user } = useAuth();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -19,7 +21,7 @@ export default function DetailPage() {
   const fetchDetail = async () => {
     setLoading(true);
     try {
-      const res = await apiGetApplication(id);
+      const res = await apiGetApplication(user?.token, id);
       if (res.success) setData(res.data);
     } catch (err) { console.error(err); }
     finally { setLoading(false); }
@@ -30,7 +32,7 @@ export default function DetailPage() {
   const confirmStatusChange = async () => {
     setUpdating(true);
     try {
-      const res = await apiUpdateStatus(id, pendingStatus);
+      const res = await apiUpdateStatus(user?.token, id, pendingStatus);
       if (res.success) { setData(res.data); setShowConfirm(false); }
     } catch (err) { console.error(err); }
     finally { setUpdating(false); }

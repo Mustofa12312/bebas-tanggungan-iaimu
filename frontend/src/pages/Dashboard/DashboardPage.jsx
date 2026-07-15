@@ -6,8 +6,10 @@ import {
 } from 'lucide-react';
 import { Card, Button, StatCard, StatusBadge, LoadingSpinner, EmptyState } from '../../components/ui';
 import { apiGetDashboard, apiGetApplications } from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
 
 export default function DashboardPage() {
+  const { user } = useAuth();
   const [stats, setStats] = useState(null);
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,8 +22,8 @@ export default function DashboardPage() {
     setLoading(true);
     try {
       const [dashRes, appRes] = await Promise.all([
-        apiGetDashboard(),
-        apiGetApplications(),
+        apiGetDashboard(user?.token),
+        apiGetApplications(user?.token),
       ]);
       if (dashRes.success) setStats(dashRes.data);
       if (appRes.success) setApplications(appRes.data);

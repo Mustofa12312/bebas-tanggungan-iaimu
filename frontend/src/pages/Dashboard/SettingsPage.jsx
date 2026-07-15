@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 import { Save, CheckCircle } from 'lucide-react';
 import { Card, Button, Alert, LoadingSpinner } from '../../components/ui';
 import { apiGetSettings, apiSaveSettings } from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
 
 export default function SettingsPage() {
+  const { user } = useAuth();
   const [settings, setSettings] = useState({
     tahunAktif: '', nomorSuratTerakhir: '', waAdmin1: '', waAdmin2: '', waAdmin3: '',
   });
@@ -12,14 +14,14 @@ export default function SettingsPage() {
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    const fetch = async () => {
+    const fetchSettings = async () => {
       try {
-        const res = await apiGetSettings();
+        const res = await apiGetSettings(user?.token);
         if (res.success) setSettings(res.data);
       } catch (err) { console.error(err); }
       finally { setLoading(false); }
     };
-    fetch();
+    fetchSettings();
   }, []);
 
   const handleSave = async (e) => {
@@ -27,7 +29,7 @@ export default function SettingsPage() {
     setSaving(true);
     setSaved(false);
     try {
-      const res = await apiSaveSettings(settings);
+      const res = await apiSaveSettings(user?.token, settings);
       if (res.success) {
         setSaved(true);
         setTimeout(() => setSaved(false), 3000);

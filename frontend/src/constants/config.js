@@ -28,7 +28,7 @@ export const STATUS_COLORS = {
 export const WA_TEMPLATE = (nama, nim, prodi) =>
   `Assalamu'alaikum Admin.%0A%0ASaya telah mengajukan Surat Keterangan Bebas Tanggungan Keuangan.%0A%0ANama : ${nama}%0ANIM : ${nim}%0AProgram Studi : ${prodi}%0A%0AMohon dilakukan verifikasi.%0A%0ATerima kasih.`;
 
-export const DEFAULT_WA_ADMIN = '628123456789';
+export const DEFAULT_WA_ADMIN = '6282336388410';
 
 export const PRODI_LIST = [
   'Pendidikan Agama Islam',

@@ -34,7 +34,7 @@ export function StatusBadge({ status }) {
 
 export function Card({ children, className = '', hover = false }) {
   return (
-    <div className={`bg-white rounded-2xl border border-slate-200 shadow-sm ${hover ? 'hover:shadow-md hover:border-slate-300 transition-all duration-200' : ''} ${className}`}>
+    <div className={`bg-white rounded-2xl border border-slate-200/80 shadow-sm ${hover ? 'hover:shadow-lg hover:-translate-y-1 transition-all duration-300' : ''} ${className}`}>
       {children}
     </div>
   );
@@ -42,13 +42,13 @@ export function Card({ children, className = '', hover = false }) {
 
 export function Button({ children, variant = 'primary', size = 'md', loading = false, disabled = false, className = '', ...props }) {
   const variants = {
-    primary: 'bg-primary-500 hover:bg-primary-600 text-white shadow-md hover:shadow-lg',
-    secondary: 'bg-slate-100 hover:bg-slate-200 text-slate-700',
-    success: 'bg-emerald-500 hover:bg-emerald-600 text-white shadow-md',
-    danger: 'bg-red-500 hover:bg-red-600 text-white shadow-md',
+    primary: 'bg-primary-600 hover:bg-primary-700 active:bg-primary-800 text-white shadow-md shadow-primary-500/20 hover:shadow-lg hover:shadow-primary-500/30',
+    secondary: 'bg-primary-50 hover:bg-primary-100 text-primary-700',
+    success: 'bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white shadow-md shadow-emerald-500/20',
+    danger: 'bg-red-500 hover:bg-red-600 active:bg-red-700 text-white shadow-md shadow-red-500/20',
     warning: 'bg-amber-500 hover:bg-amber-600 text-white shadow-md',
-    outline: 'border-2 border-primary-300 text-primary-600 hover:bg-primary-50',
-    ghost: 'text-slate-600 hover:bg-slate-100',
+    outline: 'border-2 border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50',
+    ghost: 'text-slate-600 hover:bg-slate-100 hover:text-slate-900',
   };
 
   const sizes = {
@@ -60,7 +60,7 @@ export function Button({ children, variant = 'primary', size = 'md', loading = f
   return (
     <button
       disabled={loading || disabled}
-      className={`inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] ${variants[variant]} ${sizes[size]} ${className}`}
+      className={`inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] outline-none focus:ring-4 focus:ring-primary-500/20 ${variants[variant]} ${sizes[size]} ${className}`}
       {...props}
     >
       {loading && <Loader2 className="w-4 h-4 animate-spin" />}

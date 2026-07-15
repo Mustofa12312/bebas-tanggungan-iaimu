@@ -4,7 +4,7 @@ export const APP_CONFIG = {
   apiUrl: import.meta.env.VITE_API_URL || '',
   institution: {
     name: 'IAIMU Pamekasan',
-    fullName: 'Institut Agama Islam Al-Khairat Pamekasan',
+    fullName: 'Institut Agama Islam Miftahul Ulum Pamekasan',
     address: 'Jl. Raya Pamekasan',
     bau: {
       name: 'MUCHLIS, M.H',

@@ -2,15 +2,18 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import QRCode from 'react-qr-code';
 import { ArrowLeft, Download, Printer, AlertCircle } from 'lucide-react';
+import html2pdf from 'html2pdf.js';
 import { Button, Card, LoadingSpinner, Alert } from '../../components/ui';
 import { apiCheckStatus } from '../../services/api';
 import { APP_CONFIG } from '../../constants/config';
+import logoImg from '../../assets/logo.jpg';
 
 export default function PrintPage() {
   const { nim } = useParams();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isDownloading, setIsDownloading] = useState(false);
   const printRef = useRef(null);
 
   useEffect(() => {
@@ -33,21 +36,32 @@ export default function PrintPage() {
     fetchData();
   }, [nim]);
 
-  const handlePrint = () => {
+  const handlePrint = (e) => {
+    e.preventDefault();
     window.print();
   };
 
-  const handleDownload = async () => {
-    const html2pdf = (await import('html2pdf.js')).default;
-    const element = printRef.current;
-    const opt = {
-      margin: 0,
-      filename: `Surat_Bebas_Tanggungan_${data.nim}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-    };
-    html2pdf().set(opt).from(element).save();
+  const handleDownload = async (e) => {
+    e.preventDefault();
+    if (isDownloading) return;
+    
+    setIsDownloading(true);
+    try {
+      const element = printRef.current;
+      const opt = {
+        margin: [10, 10, 10, 10],
+        filename: `Surat_Bebas_Tanggungan_${data.nim}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      };
+      await html2pdf().set(opt).from(element).save();
+    } catch (err) {
+      console.error('Download error:', err);
+      alert('Gagal mengunduh PDF. Silakan coba menggunakan tombol Print lalu Save as PDF.');
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   const formatDate = (dateStr) => {
@@ -100,11 +114,11 @@ export default function PrintPage() {
           Kembali
         </Link>
         <div className="flex gap-3">
-          <Button variant="outline" onClick={handlePrint}>
+          <Button type="button" variant="outline" onClick={handlePrint}>
             <Printer className="w-4 h-4" />
             Print
           </Button>
-          <Button variant="primary" onClick={handleDownload}>
+          <Button type="button" variant="primary" onClick={handleDownload} loading={isDownloading}>
             <Download className="w-4 h-4" />
             Download PDF
           </Button>
@@ -115,101 +129,117 @@ export default function PrintPage() {
       <Card className="overflow-hidden shadow-lg">
         <div
           ref={printRef}
-          className="bg-white p-8 md:p-12 lg:p-16"
-          style={{ fontFamily: "'Times New Roman', serif" }}
+          className="bg-white p-8 md:p-12 lg:p-16 relative"
+          style={{ fontFamily: "'Times New Roman', Times, serif", color: '#000' }}
         >
           {/* Kop Surat */}
-          <div className="text-center border-b-4 border-double border-black pb-4 mb-6">
-            <h2 className="text-lg font-bold tracking-wider" style={{ fontSize: '18px' }}>
-              INSTITUT AGAMA ISLAM AL-KHAIRAT
-            </h2>
-            <h3 className="text-base font-bold" style={{ fontSize: '16px' }}>
-              (IAIMU) PAMEKASAN
-            </h3>
-            <p className="text-xs mt-1" style={{ fontSize: '11px' }}>
-              Jl. Raya Pamekasan | Telp. (0324) XXXXXX
-            </p>
+          <div className="flex items-center gap-4 mb-4">
+            {/* Logo */}
+            <div className="w-24 shrink-0 flex justify-center">
+              <img src={logoImg} alt="Logo IAIMU" className="w-20 h-auto" onError={(e) => { e.target.style.display = 'none'; }} />
+            </div>
+            {/* Kop Text */}
+            <div className="flex-1 text-center pr-12">
+              <p className="text-sm tracking-wide" style={{ fontSize: '13px' }}>
+                Yayasan Waqof, Sosial, Pendidikan dan Dakwah Islamiyah &quot;Al-Miftah&quot;
+              </p>
+              <h2 className="font-bold text-teal-800" style={{ fontSize: '18px', color: '#006666', lineHeight: '1.2', marginTop: '2px', marginBottom: '2px' }}>
+                INSTITUT AGAMA ISLAM MIFTAHUL ULUM<br/>PAMEKASAN
+              </h2>
+              <p className="text-sm" style={{ fontSize: '13px' }}>
+                Alamat : Jl. Raya Palengaan Km 11 Pamekasan Madura
+              </p>
+              <p className="text-sm" style={{ fontSize: '13px' }}>
+                Hp. 0823 3638 8410 website : www.iaimu.ac.id
+              </p>
+            </div>
+          </div>
+          
+          {/* Garis Kop */}
+          <div className="mb-8">
+            <div className="border-b-[3px] border-black w-full mb-[2px]"></div>
+            <div className="border-b-[1px] border-black w-full"></div>
           </div>
 
           {/* Judul Surat */}
-          <div className="text-center mb-8">
-            <h1 className="text-base font-bold underline mb-1" style={{ fontSize: '15px' }}>
+          <div className="text-center mb-10">
+            <h1 className="font-bold mb-1" style={{ fontSize: '16px' }}>
               SURAT KETERANGAN BEBAS TANGGUNGAN
             </h1>
-            <p className="text-sm" style={{ fontSize: '13px' }}>
-              Nomor : {data.nomorSurat}
+            <p style={{ fontSize: '14px' }}>
+              Nomor : {data?.nomorSurat || '075/A2/IAIMU/2026'}
             </p>
           </div>
 
           {/* Isi Surat */}
-          <div className="space-y-4 text-sm leading-relaxed" style={{ fontSize: '13px' }}>
+          <div className="space-y-4" style={{ fontSize: '14px', lineHeight: '1.6' }}>
             <p>Yang bertanda tangan dibawah ini:</p>
 
-            <table className="ml-8">
+            <table className="w-full max-w-lg mb-2">
               <tbody>
                 <tr>
-                  <td className="pr-4 py-1 align-top">Nama</td>
-                  <td className="pr-2 py-1 align-top">:</td>
-                  <td className="py-1 font-semibold">{APP_CONFIG.institution.bau.name}</td>
+                  <td className="w-32 py-1 align-top">Nama</td>
+                  <td className="w-4 py-1 align-top">:</td>
+                  <td className="py-1">MUCHLIS, M.H</td>
                 </tr>
                 <tr>
-                  <td className="pr-4 py-1 align-top">Jabatan</td>
-                  <td className="pr-2 py-1 align-top">:</td>
-                  <td className="py-1">{APP_CONFIG.institution.bau.jabatan}</td>
+                  <td className="w-32 py-1 align-top">Jabatan</td>
+                  <td className="w-4 py-1 align-top">:</td>
+                  <td className="py-1">Biro Administrasi Umum</td>
                 </tr>
                 <tr>
-                  <td className="pr-4 py-1 align-top">Institusi</td>
-                  <td className="pr-2 py-1 align-top">:</td>
-                  <td className="py-1">{APP_CONFIG.institution.name}</td>
+                  <td className="w-32 py-1 align-top">Intitusi</td>
+                  <td className="w-4 py-1 align-top">:</td>
+                  <td className="py-1">IAIMU Pamekasan</td>
                 </tr>
               </tbody>
             </table>
 
             <p>Menerangkan bahwa :</p>
 
-            <table className="ml-8">
+            <table className="w-full max-w-lg mb-4">
               <tbody>
                 <tr>
-                  <td className="pr-4 py-1 align-top">Nama</td>
-                  <td className="pr-2 py-1 align-top">:</td>
-                  <td className="py-1 font-semibold">{data.nama}</td>
+                  <td className="w-32 py-1 align-top">Nama</td>
+                  <td className="w-4 py-1 align-top">:</td>
+                  <td className="py-1 font-bold">{data?.nama}</td>
                 </tr>
                 <tr>
-                  <td className="pr-4 py-1 align-top">NIM</td>
-                  <td className="pr-2 py-1 align-top">:</td>
-                  <td className="py-1">{data.nim}</td>
+                  <td className="w-32 py-1 align-top">NIM</td>
+                  <td className="w-4 py-1 align-top">:</td>
+                  <td className="py-1">{data?.nim}</td>
                 </tr>
                 <tr>
-                  <td className="pr-4 py-1 align-top">Prodi</td>
-                  <td className="pr-2 py-1 align-top">:</td>
-                  <td className="py-1">{data.prodi}</td>
+                  <td className="w-32 py-1 align-top">Prodi</td>
+                  <td className="w-4 py-1 align-top">:</td>
+                  <td className="py-1">{data?.prodi}</td>
                 </tr>
               </tbody>
             </table>
 
-            <p className="text-justify">
-              Telah menyelesaikan semua jenis pembayaran administrasi keuangan dan yang bersangkutan telah bebas dari tanggungan keuangan {APP_CONFIG.institution.name}.
+            <p className="text-justify indent-10">
+              Telah menyelesaikan semua jenis pembayaran administrasi keuangan dan yang bersangkutan telah bebas dari tanggungan keuangan IAIMU Pamekasan.
             </p>
 
-            <p>
-              Demikian surat keterangan ini dibuat untuk persyaratan mendapatkan ijazah {APP_CONFIG.institution.name}.
+            <p className="text-justify indent-10">
+              Demikian surat keterangan ini dibuat untuk persyaratan mendapatkan ijazah IAIMU Pamekasan.
             </p>
           </div>
 
           {/* Tanda Tangan */}
-          <div className="flex justify-between items-end mt-12">
-            {/* QR Code */}
+          <div className="flex justify-between items-end mt-16" style={{ fontSize: '14px' }}>
+            {/* QR Code (Tetap dipertahankan untuk keamanan, diletakkan di kiri bawah) */}
             <div className="flex flex-col items-center">
-              <QRCode value={verifyUrl} size={80} level="M" />
-              <p className="text-[9px] text-slate-400 mt-1">Scan untuk verifikasi</p>
+              <QRCode value={verifyUrl} size={70} level="M" />
+              <p className="text-[9px] text-gray-500 mt-1">Scan QR untuk verifikasi</p>
             </div>
 
-            {/* TTD */}
-            <div className="text-center" style={{ fontSize: '13px' }}>
-              <p>Pamekasan, {formatDate(data.tanggalValidasi)}</p>
-              <p>{APP_CONFIG.institution.bau.jabatan} (BAU)</p>
-              <div className="h-20" />
-              <p className="font-bold underline">{APP_CONFIG.institution.bau.name}</p>
+            {/* TTD Block */}
+            <div className="text-left w-64">
+              <p>Pamekasan, {formatDate(data?.tanggalValidasi || new Date())}</p>
+              <p>Biro Administrasi Umum (BAU)</p>
+              <div className="h-24" />
+              <p className="font-bold underline text-black">MUCHLIS, M.H</p>
             </div>
           </div>
         </div>

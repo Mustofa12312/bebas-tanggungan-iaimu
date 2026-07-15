@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Send, ArrowLeft, AlertCircle, CheckSquare, Square } from 'lucide-react';
+import { Send, ArrowLeft, AlertCircle, CheckSquare, Square, User, CreditCard, BookOpen, Phone } from 'lucide-react';
 import { Button, Card, Alert } from '../../components/ui';
 import { apiSubmit } from '../../services/api';
-import { PRODI_LIST, WA_TEMPLATE, DEFAULT_WA_ADMIN } from '../../constants/config';
+import { PRODI_LIST } from '../../constants/config';
 
 const schema = z.object({
   nama: z.string().min(1, 'Nama wajib diisi').max(100, 'Maksimal 100 karakter').trim(),
@@ -25,7 +25,6 @@ export default function ApplyPage() {
     register,
     handleSubmit,
     formState: { errors },
-    getValues,
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: { nama: '', nim: '', prodi: '', whatsapp: '' },
@@ -58,160 +57,191 @@ export default function ApplyPage() {
   };
 
   const inputClass = (hasError) =>
-    `w-full px-4 py-3 rounded-xl border-2 text-sm transition-all duration-200 outline-none ${
+    `w-full pl-11 pr-4 py-3.5 rounded-xl border-2 text-sm transition-all duration-200 outline-none bg-slate-50/50 ${
       hasError
-        ? 'border-red-300 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-200'
-        : 'border-slate-200 bg-white focus:border-primary-400 focus:ring-2 focus:ring-primary-100'
+        ? 'border-red-300 bg-red-50/50 focus:border-red-500 focus:bg-white focus:ring-4 focus:ring-red-500/10'
+        : 'border-slate-200 focus:border-primary-500 focus:bg-white focus:ring-4 focus:ring-primary-500/10'
+    }`;
+
+  const iconClass = (hasError) => 
+    `absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors ${
+      hasError ? 'text-red-400' : 'text-slate-400 peer-focus:text-primary-500'
     }`;
 
   return (
-    <div className="max-w-xl mx-auto px-4 py-8 md:py-12 animate-fade-in">
-      {/* Header */}
-      <button
-        onClick={() => navigate('/')}
-        className="flex items-center gap-2 text-sm text-slate-500 hover:text-primary-600 transition-colors mb-6"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Kembali
-      </button>
+    <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-xl animate-fade-in px-4">
+        <button
+          onClick={() => navigate('/')}
+          className="flex items-center gap-2 text-sm text-slate-500 hover:text-primary-600 transition-colors mb-6 group font-medium"
+        >
+          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+          Kembali ke Beranda
+        </button>
 
-      <div className="mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold text-slate-800 mb-2">
-          Formulir Pengajuan
-        </h1>
-        <p className="text-sm text-slate-500">
-          Lengkapi data berikut untuk mengajukan Surat Keterangan Bebas Tanggungan Keuangan.
-        </p>
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+            Formulir Pengajuan
+          </h1>
+          <p className="mt-2 text-base text-slate-500">
+            Pastikan data yang Anda masukkan sesuai dengan sistem akademik.
+          </p>
+        </div>
+
+        {error && (
+          <Alert type="error" className="mb-6 animate-slide-in shadow-sm">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 mt-0.5 shrink-0" />
+              <p className="font-medium">{error}</p>
+            </div>
+          </Alert>
+        )}
+
+        <Card className="shadow-xl shadow-slate-200/50 border-0 ring-1 ring-slate-200/50 bg-white sm:rounded-2xl overflow-hidden">
+          <div className="px-6 py-8 sm:p-10">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              
+              {/* Nama */}
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  Nama Lengkap <span className="text-red-500 ml-0.5">*</span>
+                </label>
+                <div className="relative">
+                  <input
+                    {...register('nama')}
+                    type="text"
+                    placeholder="Sesuai KTP / Ijazah"
+                    className={`peer ${inputClass(errors.nama)}`}
+                  />
+                  <User className={iconClass(errors.nama)} />
+                </div>
+                {errors.nama && (
+                  <p className="mt-2 text-xs text-red-500 flex items-center gap-1.5 font-medium animate-fade-in">
+                    <AlertCircle className="w-3.5 h-3.5" />
+                    {errors.nama.message}
+                  </p>
+                )}
+              </div>
+
+              {/* NIM */}
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  Nomor Induk Mahasiswa (NIM) <span className="text-red-500 ml-0.5">*</span>
+                </label>
+                <div className="relative">
+                  <input
+                    {...register('nim')}
+                    type="text"
+                    placeholder="Contoh: 2020123456"
+                    className={`peer ${inputClass(errors.nim)}`}
+                  />
+                  <CreditCard className={iconClass(errors.nim)} />
+                </div>
+                {errors.nim && (
+                  <p className="mt-2 text-xs text-red-500 flex items-center gap-1.5 font-medium animate-fade-in">
+                    <AlertCircle className="w-3.5 h-3.5" />
+                    {errors.nim.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Program Studi */}
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  Program Studi <span className="text-red-500 ml-0.5">*</span>
+                </label>
+                <div className="relative">
+                  <select
+                    {...register('prodi')}
+                    className={`peer appearance-none ${inputClass(errors.prodi)}`}
+                  >
+                    <option value="" disabled>Pilih Program Studi</option>
+                    {PRODI_LIST.map((p) => (
+                      <option key={p} value={p}>{p}</option>
+                    ))}
+                  </select>
+                  <BookOpen className={iconClass(errors.prodi)} />
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                  </div>
+                </div>
+                {errors.prodi && (
+                  <p className="mt-2 text-xs text-red-500 flex items-center gap-1.5 font-medium animate-fade-in">
+                    <AlertCircle className="w-3.5 h-3.5" />
+                    {errors.prodi.message}
+                  </p>
+                )}
+              </div>
+
+              {/* WhatsApp */}
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  Nomor WhatsApp Aktif <span className="text-red-500 ml-0.5">*</span>
+                </label>
+                <div className="relative">
+                  <input
+                    {...register('whatsapp')}
+                    type="text"
+                    placeholder="Contoh: 081234567890"
+                    className={`peer ${inputClass(errors.whatsapp)}`}
+                  />
+                  <Phone className={iconClass(errors.whatsapp)} />
+                </div>
+                {errors.whatsapp && (
+                  <p className="mt-2 text-xs text-red-500 flex items-center gap-1.5 font-medium animate-fade-in">
+                    <AlertCircle className="w-3.5 h-3.5" />
+                    {errors.whatsapp.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="pt-2">
+                {/* Checkbox */}
+                <div
+                  onClick={() => setAgreed(!agreed)}
+                  className={`flex items-start gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
+                    agreed
+                      ? 'bg-blue-50/50 border-blue-200 shadow-sm'
+                      : 'bg-slate-50 border-slate-200 hover:border-slate-300 hover:bg-slate-100/50'
+                  }`}
+                >
+                  <div className="mt-0.5 shrink-0">
+                    {agreed ? (
+                      <div className="w-6 h-6 rounded-md bg-blue-500 flex items-center justify-center text-white shadow-sm animate-scale-in">
+                        <CheckSquare className="w-4 h-4" />
+                      </div>
+                    ) : (
+                      <div className="w-6 h-6 rounded-md border-2 border-slate-300 flex items-center justify-center bg-white text-transparent transition-colors">
+                        <Square className="w-4 h-4" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm text-slate-700 leading-relaxed">
+                      Saya menyatakan bahwa <span className="font-semibold text-slate-900">seluruh data yang saya isi adalah benar</span>. Segala bentuk kesalahan penulisan data sepenuhnya menjadi tanggung jawab saya.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Submit */}
+              <div className="pt-4">
+                <Button
+                  type="submit"
+                  variant="primary"
+                  size="lg"
+                  loading={loading}
+                  disabled={!agreed}
+                  className="w-full text-base py-4 shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40"
+                >
+                  <Send className="w-5 h-5 mr-2" />
+                  Kirim Pengajuan
+                </Button>
+              </div>
+            </form>
+          </div>
+        </Card>
       </div>
-
-      {error && (
-        <Alert type="error" className="mb-6 animate-fade-in">
-          <div className="flex items-start gap-2">
-            <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
-            <p>{error}</p>
-          </div>
-        </Alert>
-      )}
-
-      <Card className="p-6 md:p-8">
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-          {/* Nama */}
-          <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-2">
-              Nama Lengkap <span className="text-red-500">*</span>
-            </label>
-            <input
-              {...register('nama')}
-              type="text"
-              placeholder="Masukkan nama lengkap"
-              className={inputClass(errors.nama)}
-              id="input-nama"
-            />
-            {errors.nama && (
-              <p className="mt-1.5 text-xs text-red-500 flex items-center gap-1">
-                <AlertCircle className="w-3 h-3" />
-                {errors.nama.message}
-              </p>
-            )}
-          </div>
-
-          {/* NIM */}
-          <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-2">
-              NIM <span className="text-red-500">*</span>
-            </label>
-            <input
-              {...register('nim')}
-              type="text"
-              placeholder="Masukkan NIM"
-              className={inputClass(errors.nim)}
-              id="input-nim"
-            />
-            {errors.nim && (
-              <p className="mt-1.5 text-xs text-red-500 flex items-center gap-1">
-                <AlertCircle className="w-3 h-3" />
-                {errors.nim.message}
-              </p>
-            )}
-          </div>
-
-          {/* Program Studi */}
-          <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-2">
-              Program Studi <span className="text-red-500">*</span>
-            </label>
-            <select
-              {...register('prodi')}
-              className={inputClass(errors.prodi)}
-              id="input-prodi"
-            >
-              <option value="">Pilih Program Studi</option>
-              {PRODI_LIST.map((p) => (
-                <option key={p} value={p}>{p}</option>
-              ))}
-            </select>
-            {errors.prodi && (
-              <p className="mt-1.5 text-xs text-red-500 flex items-center gap-1">
-                <AlertCircle className="w-3 h-3" />
-                {errors.prodi.message}
-              </p>
-            )}
-          </div>
-
-          {/* WhatsApp */}
-          <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-2">
-              Nomor WhatsApp <span className="text-red-500">*</span>
-            </label>
-            <input
-              {...register('whatsapp')}
-              type="text"
-              placeholder="Contoh: 628123456789"
-              className={inputClass(errors.whatsapp)}
-              id="input-whatsapp"
-            />
-            {errors.whatsapp && (
-              <p className="mt-1.5 text-xs text-red-500 flex items-center gap-1">
-                <AlertCircle className="w-3 h-3" />
-                {errors.whatsapp.message}
-              </p>
-            )}
-          </div>
-
-          {/* Checkbox */}
-          <div
-            onClick={() => setAgreed(!agreed)}
-            className={`flex items-start gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
-              agreed
-                ? 'bg-primary-50 border-primary-300'
-                : 'bg-slate-50 border-slate-200 hover:border-slate-300'
-            }`}
-          >
-            {agreed ? (
-              <CheckSquare className="w-5 h-5 text-primary-500 shrink-0 mt-0.5" />
-            ) : (
-              <Square className="w-5 h-5 text-slate-400 shrink-0 mt-0.5" />
-            )}
-            <p className="text-xs text-slate-600 leading-relaxed">
-              <strong>Saya telah memastikan seluruh data yang saya isi sudah benar.</strong> Data yang telah dikirim tidak dapat diubah. Kesalahan penulisan menjadi tanggung jawab saya.
-            </p>
-          </div>
-
-          {/* Submit */}
-          <Button
-            type="submit"
-            variant="primary"
-            size="lg"
-            loading={loading}
-            disabled={!agreed}
-            className="w-full"
-            id="btn-submit"
-          >
-            <Send className="w-4 h-4" />
-            Kirim Pengajuan
-          </Button>
-        </form>
-      </Card>
     </div>
   );
 }

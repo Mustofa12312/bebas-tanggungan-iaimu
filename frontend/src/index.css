@@ -26,19 +26,13 @@
   --color-danger-500: #ef4444;
   --color-danger-600: #dc2626;
 
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
 }
 
 body {
   font-family: var(--font-sans);
   background-color: #f8fafc;
-  color: #1e293b;
+  color: #0f172a;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

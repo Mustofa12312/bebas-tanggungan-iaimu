@@ -4,133 +4,107 @@ import { Button } from '../../components/ui';
 
 export default function HomePage() {
   return (
-    <div className="min-h-[calc(100vh-4rem)]">
+    <div className="min-h-[calc(100vh-4rem)] flex flex-col">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-primary-700 via-primary-600 to-primary-800 text-white">
-        {/* Background decorations */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-white/5 rounded-full blur-3xl" />
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-white/5 rounded-full blur-3xl" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary-400/10 rounded-full blur-3xl" />
+      <section className="relative overflow-hidden bg-gradient-to-br from-primary-800 via-primary-700 to-primary-900 text-white flex-1 flex items-center min-h-[500px]">
+        {/* Modern Geometric Pattern Background */}
+        <div className="absolute inset-0 opacity-10">
+          <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="grid-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M0 40L40 0H20L0 20M40 40V20L20 40" stroke="currentColor" strokeWidth="1" fill="none" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid-pattern)" />
+          </svg>
         </div>
 
-        <div className="relative max-w-6xl mx-auto px-4 py-20 md:py-28">
-          <div className="text-center max-w-2xl mx-auto animate-fade-in">
+        {/* Ambient Glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[800px] max-h-[800px] bg-primary-400/20 rounded-full blur-[100px] pointer-events-none" />
+
+        <div className="relative w-full max-w-7xl mx-auto px-6 py-20">
+          <div className="text-center max-w-3xl mx-auto animate-fade-in">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 text-sm mb-6 backdrop-blur-sm">
-              <Shield className="w-4 h-4" />
-              <span>Sistem Digital IAIMU Pamekasan</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 text-sm mb-8 backdrop-blur-md shadow-lg">
+              <Shield className="w-4 h-4 text-blue-200" />
+              <span className="font-medium tracking-wide">Sistem Digital IAIMU Pamekasan</span>
             </div>
 
-            <h1 className="text-3xl md:text-5xl font-extrabold leading-tight mb-4">
-              Surat Keterangan<br />
-              <span className="bg-gradient-to-r from-blue-200 to-cyan-200 bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6 tracking-tight">
+              Surat Keterangan <br className="hidden sm:block" />
+              <span className="bg-gradient-to-r from-blue-200 via-blue-100 to-white bg-clip-text text-transparent drop-shadow-sm">
                 Bebas Tanggungan Keuangan
               </span>
             </h1>
 
-            <p className="text-base md:text-lg text-white/70 mb-10 max-w-lg mx-auto leading-relaxed">
-              Ajukan surat bebas tanggungan keuangan secara online. Proses cepat, mudah, dan tanpa perlu datang ke kampus.
+            <p className="text-lg md:text-xl text-blue-100/90 mb-10 max-w-2xl mx-auto leading-relaxed font-light">
+              Ajukan surat bebas tanggungan keuangan secara online. Proses terintegrasi, transparan, dan dapat diverifikasi melalui QR Code.
             </p>
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link to="/ajukan">
-                <Button variant="primary" size="lg" className="!bg-white !text-primary-700 hover:!bg-blue-50 !shadow-xl w-full sm:w-auto">
-                  <FileText className="w-5 h-5" />
-                  Ajukan Surat
-                  <ArrowRight className="w-4 h-4" />
+              <Link to="/ajukan" className="w-full sm:w-auto">
+                <Button variant="primary" size="lg" className="w-full sm:w-auto bg-white text-primary-800 hover:bg-blue-50 shadow-xl hover:shadow-2xl hover:-translate-y-0.5 transition-all">
+                  <FileText className="w-5 h-5 mr-2" />
+                  Ajukan Surat Sekarang
+                  <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </Link>
-              <Link to="/status">
-                <Button variant="outline" size="lg" className="!border-white/30 !text-white hover:!bg-white/10 w-full sm:w-auto">
-                  <Search className="w-5 h-5" />
-                  Cek Status
+              <Link to="/status" className="w-full sm:w-auto">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto border-white/30 text-white hover:bg-white/10 backdrop-blur-sm transition-all hover:-translate-y-0.5">
+                  <Search className="w-5 h-5 mr-2" />
+                  Cek Status Pengajuan
                 </Button>
               </Link>
             </div>
           </div>
         </div>
-
-        {/* Wave divider */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1440 80" fill="none" className="w-full">
-            <path d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,50 1440,40 L1440,80 L0,80 Z" fill="#f8fafc"/>
-          </svg>
-        </div>
       </section>
 
       {/* Features Section */}
-      <section className="max-w-6xl mx-auto px-4 py-16 md:py-20">
-        <div className="text-center mb-12">
-          <h2 className="text-2xl md:text-3xl font-bold text-slate-800 mb-3">
-            Cara Kerja Sistem
-          </h2>
-          <p className="text-slate-500 max-w-md mx-auto">
-            Tiga langkah mudah untuk mendapatkan Surat Bebas Tanggungan Keuangan
-          </p>
-        </div>
+      <section className="bg-slate-50 py-20 md:py-24">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-slate-800 mb-4 tracking-tight">
+              Prosedur Pengajuan
+            </h2>
+            <p className="text-slate-600 max-w-2xl mx-auto text-lg">
+              Sistem yang dirancang untuk mempermudah mahasiswa dalam menyelesaikan administrasi secara digital.
+            </p>
+          </div>
 
-        <div className="grid md:grid-cols-3 gap-6 stagger-children">
-          {[
-            {
-              icon: FileText,
-              title: 'Isi Formulir',
-              desc: 'Lengkapi data diri Anda pada formulir pengajuan. Tidak perlu membuat akun atau login.',
-              color: 'from-blue-500 to-blue-600',
-              step: '01',
-            },
-            {
-              icon: Zap,
-              title: 'Verifikasi Admin',
-              desc: 'Admin akan memverifikasi status tanggungan keuangan Anda. Proses cepat dan transparan.',
-              color: 'from-amber-500 to-amber-600',
-              step: '02',
-            },
-            {
-              icon: CheckCircle,
-              title: 'Cetak Surat',
-              desc: 'Setelah dinyatakan lunas, unduh dan cetak surat resmi dengan QR Code verifikasi.',
-              color: 'from-emerald-500 to-emerald-600',
-              step: '03',
-            },
-          ].map(({ icon: Icon, title, desc, color, step }) => (
-            <div
-              key={step}
-              className="group relative bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-xl hover:border-slate-300 transition-all duration-300"
-            >
-              <div className="absolute -top-3 -left-2 text-5xl font-black text-slate-100 select-none group-hover:text-primary-100 transition-colors">
-                {step}
+          <div className="grid md:grid-cols-3 gap-8 stagger-children">
+            {[
+              {
+                icon: FileText,
+                title: '1. Isi Formulir',
+                desc: 'Lengkapi data identitas dan akademik Anda pada formulir pengajuan tanpa perlu melakukan login.',
+                color: 'bg-blue-50 text-blue-600 ring-blue-100',
+              },
+              {
+                icon: Zap,
+                title: '2. Verifikasi Sistem',
+                desc: 'Admin akan melakukan validasi status keuangan Anda berdasarkan data dari bagian keuangan.',
+                color: 'bg-amber-50 text-amber-600 ring-amber-100',
+              },
+              {
+                icon: CheckCircle,
+                title: '3. Cetak Dokumen',
+                desc: 'Setelah dinyatakan lunas, Anda dapat mengunduh dan mencetak surat resmi berlengkapi QR Code.',
+                color: 'bg-emerald-50 text-emerald-600 ring-emerald-100',
+              },
+            ].map(({ icon: Icon, title, desc, color }, idx) => (
+              <div
+                key={idx}
+                className="group relative bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-slate-200/60"
+              >
+                <div className={`w-14 h-14 rounded-2xl ${color} ring-4 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                  <Icon className="w-7 h-7" />
+                </div>
+                <h3 className="text-xl font-bold text-slate-800 mb-3">{title}</h3>
+                <p className="text-slate-600 leading-relaxed">{desc}</p>
               </div>
-              <div className={`relative w-12 h-12 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center shadow-md mb-4`}>
-                <Icon className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-800 mb-2">{title}</h3>
-              <p className="text-sm text-slate-500 leading-relaxed">{desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Info Banner */}
-      <section className="max-w-6xl mx-auto px-4 pb-16">
-        <div className="bg-gradient-to-r from-primary-50 to-blue-50 rounded-2xl p-6 md:p-8 border border-primary-100">
-          <div className="flex flex-col md:flex-row items-center gap-6">
-            <div className="w-14 h-14 rounded-2xl bg-primary-500 flex items-center justify-center shadow-md shrink-0">
-              <Shield className="w-7 h-7 text-white" />
-            </div>
-            <div className="flex-1 text-center md:text-left">
-              <h3 className="text-lg font-bold text-primary-800 mb-1">Surat Dilengkapi QR Code</h3>
-              <p className="text-sm text-primary-600/80">
-                Setiap surat yang diterbitkan dilengkapi QR Code untuk memverifikasi keaslian dokumen secara online.
-              </p>
-            </div>
-            <Link to="/status">
-              <Button variant="primary" size="md">
-                Cek Status Surat
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-            </Link>
+            ))}
           </div>
         </div>
       </section>

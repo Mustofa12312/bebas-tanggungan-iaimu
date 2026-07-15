@@ -1,16 +1,32 @@
-# React + Vite
+# Surat Keterangan Bebas Tanggungan Keuangan (Frontend)
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Sistem administrasi pengajuan Surat Keterangan Bebas Tanggungan Keuangan untuk mahasiswa IAIMU Pamekasan.
 
-Currently, two official plugins are available:
+## Teknologi
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React + Vite
+- Tailwind CSS v4
+- React Router DOM
+- Axios
+- React Hook Form + Zod
+- html2pdf.js (Export PDF)
+- react-qr-code (QR Verification)
 
-## React Compiler
+## Cara Instalasi
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. Pastikan Anda telah menginstal Node.js
+2. Buka terminal di folder `frontend`
+3. Jalankan `npm install`
+4. Copy file `.env.example` ke `.env` (jika ada), atau edit file `.env` langsung
+5. Jalankan `npm run dev`
 
-## Expanding the Oxlint configuration
+## Struktur Aplikasi
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+Aplikasi ini dibagi menjadi 2 bagian utama:
+1. **Public (Mahasiswa)**: Home, Form Pengajuan, Cek Status, Verifikasi QR, Download PDF
+2. **Admin**: Dashboard, Data Pengajuan, Audit Log, Pengaturan (Protected by Login)
+
+### Mock API vs Production API
+
+Secara default, jika `VITE_API_URL` tidak diisi valid (atau masih 'XXXXXXXX'), sistem otomatis menggunakan **Mock API** agar pengembangan UI/UX dapat dilakukan meskipun backend Apps Script belum siap.
+Setelah Google Apps Script selesai di-deploy, masukkan URL Web App ke `VITE_API_URL` di file `.env` untuk beralih ke mode Production.

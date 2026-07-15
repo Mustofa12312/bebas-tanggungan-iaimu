@@ -17,7 +17,7 @@ Sistem administrasi pengajuan Surat Keterangan Bebas Tanggungan Keuangan menggun
    - Di file `Code.gs`, ubah `SPREADSHEET_ID` dengan ID Spreadsheet yang Anda catat pada langkah 1.
 
 4. **Jalankan Setup Otomatis**
-   - Pilih fungsi `setupSpreadsheet` dari dropdown menu (di atas kode).
+   - Pilih fungsi `setupSpreadsheet` dari dropdown menu (di atas kode). 
    - Klik `Run` (Jalankan).
    - Berikan izin otorisasi yang diminta (Review Permissions -> Allow).
    - Ini akan otomatis membuat semua sheet (Pengajuan, Admin, Pengaturan, Audit Log) beserta header tabel, dan juga memasukkan akun Admin default.

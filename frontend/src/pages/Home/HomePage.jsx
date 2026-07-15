@@ -44,7 +44,7 @@ export default function HomePage() {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link to="/ajukan" className="w-full sm:w-auto">
-                <Button variant="primary" size="lg" className="w-full sm:w-auto bg-white text-primary-800 hover:bg-blue-50 shadow-xl hover:shadow-2xl hover:-translate-y-0.5 transition-all">
+                <Button size="lg" className="w-full sm:w-auto !bg-white !text-primary-800 hover:!bg-blue-50 shadow-xl hover:shadow-2xl hover:-translate-y-0.5 transition-all">
                   <FileText className="w-5 h-5 mr-2" />
                   Ajukan Surat Sekarang
                   <ArrowRight className="w-4 h-4 ml-2" />

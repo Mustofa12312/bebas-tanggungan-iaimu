@@ -116,10 +116,44 @@ body {
 
 /* Print styles */
 @media print {
-  .no-print {
-    display: none !important;
+  @page {
+    margin: 0;
   }
   body {
     background: white;
+    margin: 0;
+    padding: 0;
+  }
+  .no-print {
+    display: none !important;
+  }
+  /* Force clean layout for printing */
+  .shadow-lg {
+    box-shadow: none !important;
+  }
+  .max-w-4xl {
+    max-width: none !important;
+  }
+  .px-4 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .py-8 {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  .bg-slate-50 {
+    background: white !important;
+  }
+  .border, .border-slate-200 {
+    border-color: transparent !important;
+  }
+  .rounded-2xl {
+    border-radius: 0 !important;
+  }
+  /* Ensure exact colors */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 }

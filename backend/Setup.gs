@@ -23,9 +23,9 @@ function setupSpreadsheet() {
     sheet.appendRow(['Username', 'Password Hash', 'Nama', 'Status']);
     sheet.getRange(1, 1, 1, 4).setFontWeight('bold').setBackground('#e8eaed');
 
-    // Add default admin (password: admin123)
-    const defaultHash = hashPassword('admin123');
-    sheet.appendRow(['admin', defaultHash, 'Administrator', 'Aktif']);
+    // Add default admin (password: iamu#123321)
+    const defaultHash = hashPassword('iamu#123321');
+    sheet.appendRow(['iamupamekasan', defaultHash, 'Administrator', 'Aktif']);
   }
 
   // Sheet 3: Pengaturan

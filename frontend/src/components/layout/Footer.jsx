@@ -3,7 +3,7 @@ import { ShieldCheck } from 'lucide-react';
 export default function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="print:hidden bg-slate-900 text-slate-300 mt-auto">
+    <footer className="no-print print:hidden bg-slate-900 text-slate-300 mt-auto">
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-4">

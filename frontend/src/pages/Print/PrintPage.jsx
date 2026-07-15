@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import QRCode from 'react-qr-code';
 import { ArrowLeft, Download, Printer, AlertCircle } from 'lucide-react';
-import html2pdf from 'html2pdf.js';
+import { jsPDF } from 'jspdf';
 import { Button, Card, LoadingSpinner, Alert } from '../../components/ui';
 import { apiCheckStatus } from '../../services/api';
 import { APP_CONFIG } from '../../constants/config';
@@ -47,18 +47,141 @@ export default function PrintPage() {
     
     setIsDownloading(true);
     try {
-      const element = printRef.current;
-      const opt = {
-        margin: [10, 10, 10, 10],
-        filename: `Surat_Bebas_Tanggungan_${data.nim}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, logging: false },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      };
-      await html2pdf().set(opt).from(element).save();
+      const doc = new jsPDF({
+        unit: 'mm',
+        format: 'a4',
+        orientation: 'portrait'
+      });
+
+      // Load image first
+      const img = new Image();
+      img.src = logoImg;
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = reject;
+      });
+
+      // Kop Surat
+      doc.addImage(img, 'JPEG', 15, 12, 22, 22);
+      doc.setFontSize(10);
+      doc.setFont('times', 'normal');
+      doc.text('Yayasan Waqof, Sosial, Pendidikan dan Dakwah Islamiyah "Al-Miftah"', 45, 16);
+      
+      doc.setFontSize(13);
+      doc.setTextColor(0, 102, 102);
+      doc.setFont('times', 'bold');
+      doc.text('INSTITUT AGAMA ISLAM MIFTAHUL ULUM', 45, 22);
+      doc.text('PAMEKASAN', 45, 27);
+      
+      doc.setFontSize(10);
+      doc.setTextColor(0, 0, 0);
+      doc.setFont('times', 'normal');
+      doc.text('Alamat : Jl. Raya Palengaan Km 11 Pamekasan Madura', 45, 32);
+      doc.text('Hp. 0823 3638 8410 website : www.iaimu.ac.id', 45, 37);
+
+      // Garis
+      doc.setLineWidth(0.8);
+      doc.line(15, 41, 195, 41);
+      doc.setLineWidth(0.2);
+      doc.line(15, 42, 195, 42);
+
+      // Judul Surat
+      doc.setFontSize(12);
+      doc.setFont('times', 'bold');
+      doc.text('SURAT KETERANGAN BEBAS TANGGUNGAN', 105, 55, { align: 'center' });
+      doc.setLineWidth(0.3);
+      doc.line(60, 56, 150, 56);
+      
+      doc.setFont('times', 'normal');
+      doc.setFontSize(11);
+      doc.text(`Nomor : ${data.nomorSurat || '075/A2/IAIMU/2026'}`, 105, 61, { align: 'center' });
+
+      // Isi Surat
+      const startY = 75;
+      const col1 = 15;
+      const col2 = 25;
+      const col3 = 60;
+
+      doc.text('Yang bertanda tangan dibawah ini:', col1, startY);
+      
+      doc.text('Nama', col2, startY + 8); 
+      doc.text(': MUCHLIS, M.H', col3, startY + 8);
+      
+      doc.text('Jabatan', col2, startY + 16); 
+      doc.text(': Biro Administrasi Umum', col3, startY + 16);
+      
+      doc.text('Institusi', col2, startY + 24); 
+      doc.text(': IAIMU Pamekasan', col3, startY + 24);
+
+      doc.text('Menerangkan bahwa :', col1, startY + 36);
+      
+      doc.text('Nama', col2, startY + 44); 
+      doc.setFont('times', 'bold');
+      doc.text(`: ${data.nama}`, col3, startY + 44);
+      doc.setFont('times', 'normal');
+      
+      doc.text('NIM', col2, startY + 52); 
+      doc.text(`: ${data.nim}`, col3, startY + 52);
+      
+      doc.text('Prodi', col2, startY + 60); 
+      doc.text(`: ${data.prodi}`, col3, startY + 60);
+
+      doc.text('Telah menyelesaikan semua jenis pembayaran administrasi keuangan dan yang bersangkutan', col2, startY + 72);
+      doc.text('telah bebas dari tanggungan keuangan IAIMU Pamekasan.', col1, startY + 78);
+
+      doc.text('Demikian surat keterangan ini dibuat untuk persyaratan mendapatkan ijazah IAIMU Pamekasan.', col2, startY + 90);
+
+      // Tanda Tangan
+      const footerY = startY + 115;
+      doc.text(`Pamekasan, ${formatDate(data.tanggalValidasi)}`, 130, footerY);
+      doc.text('Biro Administrasi Umum (BAU)', 130, footerY + 6);
+      
+      doc.setFont('times', 'bold');
+      doc.text('MUCHLIS, M.H', 130, footerY + 30);
+      doc.line(130, footerY + 31, 162, footerY + 31); // Underline
+
+      // Add QR Code
+      const svgElement = document.querySelector('#qrCodeContainer svg');
+      if (svgElement) {
+        const xmlSerializer = new XMLSerializer();
+        const svgStr = xmlSerializer.serializeToString(svgElement);
+        const svgBlob = new Blob([svgStr], {type: "image/svg+xml;charset=utf-8"});
+        const DOMURL = window.URL || window.webkitURL || window;
+        const url = DOMURL.createObjectURL(svgBlob);
+        
+        const imgQr = new Image();
+        imgQr.src = url;
+        await new Promise((resolve) => {
+          imgQr.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = 140; // Double scale for sharpness
+            canvas.height = 140;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, 140, 140);
+            ctx.drawImage(imgQr, 0, 0, 140, 140);
+            const qrDataUrl = canvas.toDataURL('image/png');
+            
+            doc.addImage(qrDataUrl, 'PNG', 20, footerY, 25, 25);
+            doc.setFontSize(8);
+            doc.setTextColor(100, 100, 100);
+            doc.setFont('times', 'normal');
+            doc.text('Scan QR untuk verifikasi', 32.5, footerY + 29, { align: 'center' });
+            
+            DOMURL.revokeObjectURL(url);
+            resolve();
+          };
+          imgQr.onerror = () => {
+            console.warn('Failed to load QR image for PDF');
+            resolve();
+          };
+        });
+      }
+
+      doc.save(`Surat_Bebas_Tanggungan_${data.nim}.pdf`);
     } catch (err) {
       console.error('Download error:', err);
-      alert('Gagal mengunduh PDF. Silakan coba menggunakan tombol Print lalu Save as PDF.');
+      alert(`Gagal mengunduh PDF: ${err.message || 'Kesalahan sistem'}.`);
     } finally {
       setIsDownloading(false);
     }
@@ -229,7 +352,7 @@ export default function PrintPage() {
           {/* Tanda Tangan */}
           <div className="flex justify-between items-end mt-16" style={{ fontSize: '14px' }}>
             {/* QR Code (Tetap dipertahankan untuk keamanan, diletakkan di kiri bawah) */}
-            <div className="flex flex-col items-center">
+            <div id="qrCodeContainer" className="flex flex-col items-center">
               <QRCode value={verifyUrl} size={70} level="M" />
               <p className="text-[9px] text-gray-500 mt-1">Scan QR untuk verifikasi</p>
             </div>

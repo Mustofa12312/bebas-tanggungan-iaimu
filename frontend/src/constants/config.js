@@ -31,10 +31,10 @@ export const WA_TEMPLATE = (nama, nim, prodi) =>
 export const DEFAULT_WA_ADMIN = '6282336388410';
 
 export const PRODI_LIST = [
-  'Pendidikan Agama Islam',
-  'Hukum Keluarga Islam',
-  'Komunikasi dan Penyiaran Islam',
-  'Pendidikan Guru Madrasah Ibtidaiyah',
-  'Manajemen Pendidikan Islam',
-  'Ekonomi Syariah',
+  'Bimbingan dan Penyuluhan Islam (BPI)',
+  'Manajemen Dakwah (MD)',
+  'Hukum Keluarga Islam (HKI)',
+  'Ekonomi Syariah (ES)',
+  'Pendidikan Agama Islam (PAI)',
+  'Pendidikan Bahasa Arab (PBA)',
 ];

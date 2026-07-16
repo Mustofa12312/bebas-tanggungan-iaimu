@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
-  LayoutDashboard, FileText, ClipboardList, Settings, LogOut, Menu, X, ChevronRight, User
+  LayoutDashboard, FileText, ClipboardList, Settings, LogOut, Menu, X, ChevronRight, User, ShieldCheck
 } from 'lucide-react';
 
 const navItems = [
@@ -43,9 +43,9 @@ export default function AdminLayout({ children }) {
         {/* Sidebar Header */}
         <div className="p-5 border-b border-white/10">
           <div className="flex items-center justify-between">
-            <Link to="/admin/dashboard" className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                <FileText className="w-5 h-5" />
+            <Link to="/admin/dashboard" className="flex items-center gap-3 group">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-600 to-primary-800 flex items-center justify-center shadow-md shadow-black/20 border border-primary-500/30 group-hover:scale-105 transition-transform duration-300">
+                <ShieldCheck className="w-5 h-5 text-white" />
               </div>
               <div>
                 <h1 className="text-sm font-bold leading-tight">Admin Panel</h1>

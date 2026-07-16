@@ -7,8 +7,8 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center border border-slate-700">
-              <ShieldCheck className="w-6 h-6 text-slate-400" />
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-600 to-primary-800 flex items-center justify-center border border-slate-700 shadow-md shadow-black/20">
+              <ShieldCheck className="w-6 h-6 text-white" />
             </div>
             <div>
               <h3 className="text-base font-bold text-white tracking-tight">Sistem Bebas Tanggungan Keuangan</h3>
